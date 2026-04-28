@@ -1,6 +1,7 @@
 package com.bank.user_service.controller;
 
 
+import com.bank.user_service.dto.LoginRequest;
 import com.bank.user_service.entity.User;
 import com.bank.user_service.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
