@@ -35,7 +35,7 @@ public class TransactionService {
     }
 
     public void withdraw(Long accountId, Double amount) {
-        Account acc = accountRepository.findById(accountId).orElseThrow();
+        Account acc = accountRepository.findById(accountId).orElseThrow(() -> new RuntimeException("Account not found"));;
 
         if (acc.getBalance() < amount) {
             throw new RuntimeException("Insufficient balance");
