@@ -11,6 +11,8 @@ import com.bank.user_service.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class TransactionService {
 
@@ -19,6 +21,10 @@ public class TransactionService {
 
     @Autowired
     private AccountRepository accountRepository;
+
+    public List<Transaction> getTransactions(Long accountId) {
+        return transactionRepository.findByAccountId(accountId);
+    }
 
     public void deposit(Long accountId, Double amount) {
         Account acc = accountRepository.findById(accountId).orElseThrow();

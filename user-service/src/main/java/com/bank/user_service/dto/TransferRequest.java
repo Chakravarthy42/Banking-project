@@ -1,8 +1,14 @@
 package com.bank.user_service.dto;
 
+import jakarta.validation.constraints.*;
+
 public class TransferRequest {
+    @NotNull
     private Long fromAccountId;
+    @NotNull
     private Long toAccountId;
+    @NotNull
+    @Min(1)
     private Double amount;
 
     // getters & setters
