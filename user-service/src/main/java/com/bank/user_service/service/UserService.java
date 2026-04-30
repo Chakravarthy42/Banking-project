@@ -5,6 +5,7 @@ import com.bank.user_service.entity.Account;
 import com.bank.user_service.entity.User;
 import com.bank.user_service.repository.AccountRepository;
 import com.bank.user_service.repository.UserRepository;
+import com.bank.user_service.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,27 +16,24 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private AccountRepository accountRepository;
+    private JwtUtil jwtUtil;
 
-
-
+    // REGISTER
     public User register(User user) {
         return userRepository.save(user);
     }
 
-    public User login(String email, String password) {
-        User user = userRepository.findByEmail(email);
+    // LOGIN (ONLY ONE METHOD ✅)
+    public String login(String email, String password) {
 
-        if (user == null) {
-            throw new RuntimeException("User not found");
-        }
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         if (!user.getPassword().equals(password)) {
             throw new RuntimeException("Invalid password");
         }
 
-        return user;
+        // generate JWT token
+        return jwtUtil.generateToken(email);
     }
-
-
 }

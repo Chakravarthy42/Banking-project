@@ -2,6 +2,7 @@ package com.bank.user_service.service;
 
 import com.bank.user_service.entity.Account;
 import com.bank.user_service.entity.Transaction;
+import com.bank.user_service.exception.CustomException;
 import com.bank.user_service.repository.AccountRepository;
 import com.bank.user_service.repository.TransactionRepository;
 
@@ -25,7 +26,7 @@ public class TransferService {
         Account to = accountRepository.findById(toId).orElseThrow();
 
         if (from.getBalance() < amount) {
-            throw new RuntimeException("Insufficient balance");
+            throw new CustomException("Insufficient balance");
         }
 
         // deduct

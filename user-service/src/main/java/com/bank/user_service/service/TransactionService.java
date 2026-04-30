@@ -5,6 +5,7 @@ package com.bank.user_service.service;
 
 import com.bank.user_service.entity.Account;
 import com.bank.user_service.entity.Transaction;
+import com.bank.user_service.exception.CustomException;
 import com.bank.user_service.repository.AccountRepository;
 import com.bank.user_service.repository.TransactionRepository;
 
@@ -44,7 +45,7 @@ public class TransactionService {
         Account acc = accountRepository.findById(accountId).orElseThrow(() -> new RuntimeException("Account not found"));;
 
         if (acc.getBalance() < amount) {
-            throw new RuntimeException("Insufficient balance");
+            throw new CustomException("Insufficient balance");
         }
 
         acc.setBalance(acc.getBalance() - amount);

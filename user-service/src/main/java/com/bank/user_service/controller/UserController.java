@@ -25,28 +25,34 @@ public class UserController {
     @Autowired
     private TransferService transferService;
 
+    // REGISTER
     @PostMapping("/register")
     public User register(@RequestBody User user) {
         return userService.register(user);
-
     }
 
+    // LOGIN (returns TOKEN ✅)
     @PostMapping("/login")
-    public User login(@RequestBody LoginRequest request) {
+    public String login(@RequestBody LoginRequest request) {
         return userService.login(request.getEmail(), request.getPassword());
     }
 
+    // CREATE ACCOUNT
     @PostMapping("/create")
     public Account create(@RequestParam Long userId) {
         return accountService.createAccount(userId);
     }
 
-    @PostMapping
-    public void transfer(@Valid @RequestBody TransferRequest request) {
+    // TRANSFER
+    @PostMapping("/transfer")
+    public String transfer(@Valid @RequestBody TransferRequest request) {
+
         transferService.transfer(
                 request.getFromAccountId(),
                 request.getToAccountId(),
                 request.getAmount()
         );
+
+        return "Transfer successful";
     }
 }
