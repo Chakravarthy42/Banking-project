@@ -2,6 +2,9 @@ package com.bank.user_service.controller;
 
 import com.bank.user_service.dto.TransferRequest;
 import com.bank.user_service.service.TransferService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,11 +19,12 @@ public class TransferController {
     private TransferService transferService;
 
     @PostMapping
-    public void transfer(@RequestBody TransferRequest request) {
+    public String transfer(@Valid @RequestBody TransferRequest request) {
         transferService.transfer(
                 request.getFromAccountId(),
                 request.getToAccountId(),
                 request.getAmount()
         );
+        return "Transfer successful";
     }
 }

@@ -9,6 +9,8 @@ import com.bank.user_service.exception.CustomException;
 import com.bank.user_service.repository.AccountRepository;
 import com.bank.user_service.repository.TransactionRepository;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,4 +60,5 @@ public class TransactionService {
 
         transactionRepository.save(tx);
     }
+   
 }

@@ -1,10 +1,13 @@
 package com.bank.user_service.controller;
 
 
+
 import com.bank.user_service.entity.Transaction;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import com.bank.user_service.entity.Transaction;
 import com.bank.user_service.service.TransactionService;
 
 import java.util.List;
@@ -15,9 +18,8 @@ public class TransactionController {
 
     @Autowired
     private TransactionService transactionService;
-
     @GetMapping("/history")
-    public List<Transaction> getHistory(@RequestParam Long accountId) {
+    public List<Transaction> history(@RequestParam Long accountId) {
         return transactionService.getTransactions(accountId);
     }
 

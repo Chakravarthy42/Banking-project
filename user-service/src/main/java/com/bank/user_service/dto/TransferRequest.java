@@ -1,5 +1,6 @@
 package com.bank.user_service.dto;
 
+
 import jakarta.validation.constraints.*;
 
 public class TransferRequest {
