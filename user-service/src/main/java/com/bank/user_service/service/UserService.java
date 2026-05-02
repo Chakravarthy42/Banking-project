@@ -17,6 +17,7 @@ public class UserService {
 
     @Autowired
     private JwtUtil jwtUtil;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 

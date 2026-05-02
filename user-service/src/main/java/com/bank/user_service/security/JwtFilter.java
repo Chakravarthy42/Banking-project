@@ -1,21 +1,19 @@
 package com.bank.user_service.security;
 
-
-import jakarta.servlet.*;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import jakarta.servlet.http.*;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
+import java.io.IOException;
+import java.util.List;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
@@ -29,6 +27,14 @@ public class JwtFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
+        String path = request.getServletPath();
+
+        // ✅ SKIP LOGIN & REGISTER (VERY IMPORTANT FIX)
+        if (path.equals("/users/login") || path.equals("/users/register")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String header = request.getHeader("Authorization");
 
         if (header != null && header.startsWith("Bearer ")) {
@@ -38,23 +44,16 @@ public class JwtFilter extends OncePerRequestFilter {
             if (jwtUtil.validateToken(token)) {
 
                 String username = jwtUtil.extractUsername(token);
-
-                UsernamePasswordAuthenticationToken auth =
-                        new UsernamePasswordAuthenticationToken(
-                                username, null, new ArrayList<>());
-
-                SecurityContextHolder.getContext().setAuthentication(auth);
-           
                 String role = jwtUtil.extractRole(token);
 
                 List<SimpleGrantedAuthority> authorities =
                         List.of(new SimpleGrantedAuthority("ROLE_" + role));
 
-                UsernamePasswordAuthenticationToken auth1 =
+                UsernamePasswordAuthenticationToken auth =
                         new UsernamePasswordAuthenticationToken(
                                 username, null, authorities);
 
-                SecurityContextHolder.getContext().setAuthentication(auth1);
+                SecurityContextHolder.getContext().setAuthentication(auth);
             }
         }
 
