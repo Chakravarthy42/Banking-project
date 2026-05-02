@@ -1,9 +1,8 @@
 package com.bank.user_service.service;
 
 
-import com.bank.user_service.entity.Account;
+
 import com.bank.user_service.entity.User;
-import com.bank.user_service.repository.AccountRepository;
 import com.bank.user_service.repository.UserRepository;
 import com.bank.user_service.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
