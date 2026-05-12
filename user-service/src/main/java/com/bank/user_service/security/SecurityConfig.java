@@ -24,8 +24,10 @@ public class SecurityConfig {
             .httpBasic(basic -> basic.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/users/login", "/users/register").permitAll()
-                .requestMatchers("/users/transfer").hasRole("USER")
-                .requestMatchers("/admin/**").hasRole("ADMIN")
+                    .requestMatchers("/users/**").hasAnyRole("USER", "ADMIN")
+                    .requestMatchers("/transfer").hasAnyRole("USER", "ADMIN")
+                    .requestMatchers("/accounts/**").hasAnyRole("USER", "ADMIN")
+                    .requestMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtFilter,
@@ -33,4 +35,5 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 }

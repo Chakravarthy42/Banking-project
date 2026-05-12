@@ -2,14 +2,12 @@ package com.bank.user_service.service;
 
 import com.bank.user_service.entity.Account;
 import com.bank.user_service.entity.Transaction;
-import com.bank.user_service.exception.CustomException;
 import com.bank.user_service.repository.AccountRepository;
 import com.bank.user_service.repository.TransactionRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 @Service
 public class TransferService {
 
@@ -19,31 +17,56 @@ public class TransferService {
     @Autowired
     private TransactionRepository transactionRepository;
 
-    @Transactional
-    public void transfer(Long fromId, Long toId, Double amount) {
+    @Autowired
+    private EmailService emailService;
 
-        Account from = accountRepository.findById(fromId).orElseThrow();
-        Account to = accountRepository.findById(toId).orElseThrow();
+    public String transfer(Long fromId, Long toId, Double amount) {
 
-        if (from.getBalance() < amount) {
-            throw new CustomException("Insufficient balance");
+        System.out.println("=== TRANSFER START ===");
+
+        Account sender = accountRepository.findById(fromId)
+                .orElseThrow(() -> new RuntimeException("Sender not found"));
+
+        Account receiver = accountRepository.findById(toId)
+                .orElseThrow(() -> new RuntimeException("Receiver not found"));
+
+        if (sender.getBalance() < amount) {
+            throw new RuntimeException("Insufficient balance");
         }
 
-        // deduct
-        from.setBalance(from.getBalance() - amount);
+        sender.setBalance(sender.getBalance() - amount);
+        receiver.setBalance(receiver.getBalance() + amount);
 
-        // add
-        to.setBalance(to.getBalance() + amount);
+        accountRepository.save(sender);
+        accountRepository.save(receiver);
 
-        accountRepository.save(from);
-        accountRepository.save(to);
-
-        // record transaction
+        // ✅ SAVE TRANSACTION (FIXED)
         Transaction tx = new Transaction();
-        tx.setAccountId(fromId);
+        tx.setFromAccountId(fromId);
+        tx.setToAccountId(toId);
         tx.setAmount(amount);
         tx.setType("TRANSFER");
+        tx.setTimestamp(LocalDateTime.now());
 
         transactionRepository.save(tx);
+
+        // ✅ EMAIL
+        try {
+            emailService.sendEmail(
+                    "sender@gmail.com",
+                    "Money Sent",
+                    "₹" + amount + " sent"
+            );
+
+            emailService.sendEmail(
+                    "receiver@gmail.com",
+                    "Money Received",
+                    "₹" + amount + " received"
+            );
+        } catch (Exception e) {
+            System.out.println("Email failed");
+        }
+
+        return "Transfer successful";
     }
 }

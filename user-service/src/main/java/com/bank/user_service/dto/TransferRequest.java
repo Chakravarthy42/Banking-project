@@ -5,36 +5,37 @@ import jakarta.validation.constraints.*;
 
 public class TransferRequest {
     @NotNull
-    private Long fromAccountId;
+    private String fromEmail;
     @NotNull
-    private Long toAccountId;
+    private String toEmail;
     @NotNull
     @Min(1)
     private Double amount;
 
     // getters & setters
 
-    public Long getFromAccountId() {
-        return fromAccountId;
+
+    public @NotNull String getFromEmail() {
+        return fromEmail;
     }
 
-    public void setFromAccountId(Long fromAccountId) {
-        this.fromAccountId = fromAccountId;
+    public void setFromEmail(@NotNull String fromEmail) {
+        this.fromEmail = fromEmail;
     }
 
-    public Long getToAccountId() {
-        return toAccountId;
+    public @NotNull String getToEmail() {
+        return toEmail;
     }
 
-    public void setToAccountId(Long toAccountId) {
-        this.toAccountId = toAccountId;
+    public void setToEmail(@NotNull String toEmail) {
+        this.toEmail = toEmail;
     }
 
-    public Double getAmount() {
+    public @NotNull @Min(1) Double getAmount() {
         return amount;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(@NotNull @Min(1) Double amount) {
         this.amount = amount;
     }
 }

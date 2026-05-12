@@ -18,6 +18,8 @@ public class User {
     private String email;
     private String password;
     private String role;
+
+
 	public String getRole() {
 		return role;
 	}
@@ -49,5 +51,5 @@ public class User {
 		this.password = password;
 	}
 
-    // Getters & Setters
+// Getters & Setters
 }

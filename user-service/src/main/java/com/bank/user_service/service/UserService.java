@@ -21,28 +21,27 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // REGISTER
+    // ✅ REGISTER
     public User register(User user) {
-    	user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        // ✅ set default role
+        // ✅ set only ONE role
         user.setRole("USER");
-        user.setRole("ADMIN");
-        
+
         return userRepository.save(user);
     }
 
-    // LOGIN (ONLY ONE METHOD ✅)
+    // ✅ LOGIN
     public String login(String email, String password) {
 
-        User user = userRepository.findFirstByEmail(email)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (!user.getPassword().equals(password)) {
+        // ✅ CORRECT PASSWORD CHECK
+        if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new RuntimeException("Invalid password");
         }
 
-        // generate JWT token
         return jwtUtil.generateToken(email, user.getRole());
     }
 }

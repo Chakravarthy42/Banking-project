@@ -6,30 +6,31 @@ import com.bank.user_service.entity.Transaction;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import com.bank.user_service.entity.Transaction;
 import com.bank.user_service.service.TransactionService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/transactions")
+@RequestMapping("/users")
 public class TransactionController {
 
     @Autowired
     private TransactionService transactionService;
-    @GetMapping("/history")
-    public List<Transaction> history(@RequestParam Long accountId) {
-        return transactionService.getTransactions(accountId);
-    }
 
     @PostMapping("/deposit")
-    public void deposit(@RequestParam Long accountId, @RequestParam Double amount) {
-        transactionService.deposit(accountId, amount);
+    public String deposit(@RequestParam Long accountId,
+                          @RequestParam Double amount) {
+        return transactionService.deposit(accountId, amount);
     }
 
     @PostMapping("/withdraw")
-    public void withdraw(@RequestParam Long accountId, @RequestParam Double amount) {
-        transactionService.withdraw(accountId, amount);
+    public String withdraw(@RequestParam Long accountId,
+                           @RequestParam Double amount) {
+        return transactionService.withdraw(accountId, amount);
+    }
+
+    @GetMapping("/history")
+    public List<Transaction> history(@RequestParam Long accountId) {
+        return transactionService.getTransactions(accountId);
     }
 }

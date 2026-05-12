@@ -6,10 +6,7 @@ import com.bank.user_service.service.TransferService;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/transfer")
@@ -19,12 +16,10 @@ public class TransferController {
     private TransferService transferService;
 
     @PostMapping
-    public String transfer(@Valid @RequestBody TransferRequest request) {
-        transferService.transfer(
-                request.getFromAccountId(),
-                request.getToAccountId(),
-                request.getAmount()
-        );
-        return "Transfer successful";
+    public String transfer(@RequestParam Long fromId,
+                           @RequestParam Long toId,
+                           @RequestParam Double amount) {
+        return transferService.transfer(fromId, toId, amount);
+
     }
 }
