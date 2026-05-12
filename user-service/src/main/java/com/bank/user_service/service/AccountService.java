@@ -18,4 +18,11 @@ public class AccountService {
         acc.setBalance(0.0);
         return accountRepository.save(acc);
     }
+    
+    public double getBalance(Long userId) {
+        Account account = accountRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("Account not found"));
+
+        return account.getBalance();
+    }
 }

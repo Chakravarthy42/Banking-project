@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -20,7 +21,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtUtil jwtUtil;
-
+    
+    
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -28,9 +30,18 @@ public class JwtFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String path = request.getServletPath();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth != null && auth.isAuthenticated()) {
+            String username = auth.getName();
+            String email = auth.getName();
+        }
+       // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        //String email = auth.getName();
 
         // ✅ SKIP LOGIN & REGISTER (VERY IMPORTANT FIX)
-        if (path.equals("/users/login") || path.equals("/users/register")) {
+        String path1 = request.getRequestURI();
+        if (path1.contains("/users/login") || path1.contains("/users/register")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -49,7 +60,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 List<SimpleGrantedAuthority> authorities =
                         List.of(new SimpleGrantedAuthority("ROLE_" + role));
 
-                UsernamePasswordAuthenticationToken auth =
+                UsernamePasswordAuthenticationToken auth1 =
                         new UsernamePasswordAuthenticationToken(
                                 username, null, authorities);
 

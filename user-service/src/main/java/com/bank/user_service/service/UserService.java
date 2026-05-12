@@ -35,7 +35,7 @@ public class UserService {
     // LOGIN (ONLY ONE METHOD ✅)
     public String login(String email, String password) {
 
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findFirstByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         if (!user.getPassword().equals(password)) {
