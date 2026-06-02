@@ -1,5 +1,6 @@
 package com.bank.user_service.controller;
 
+import com.bank.user_service.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -33,7 +34,7 @@ public class AccountController {
         return ResponseEntity.ok("Account created successfully");
     }
 
-    @GetMapping("/balance")
+    @GetMapping(Constant.getBalance)
     public ResponseEntity<?> getBalance() {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
